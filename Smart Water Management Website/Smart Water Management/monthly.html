@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Water Usage</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sansation:wght@700&family=Russo+One&display=swap">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background: linear-gradient(120deg, #00008b, #00bfff, #00008b); /* Gradient neon blue */
+            color: #ddd; /* Black and dim white text */
+            margin: 0;
+            padding: 0;
+            padding-bottom: 50px; /* Padding at the bottom of the page */
+        }
+        h1 {
+            margin-top: 50px;
+            color: linear-gradient(20deg, #00008b, #00bfff, #00008b); /* Same as background gradient */
+            font-weight: 700; /* Bold */
+            font-size: 3em; /* Larger size */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); /* Text shadow */ 
+        }
+        h2 {
+            font-size: 1.8em; /* Larger size */
+            font-weight: 400; /* Normal weight */
+            color: #ddd; /* Black and dim white */
+            margin-bottom: 15px; /* Add some space at the bottom */
+            font-family: 'Russo One', sans-serif; /* Russo One font for h2 */
+        }
+        p {
+            font-size: 1.8em; /* Larger size */
+            font-weight: 300; /* Normal weight */
+            color: #404eca; /* Black and dim white */
+            margin-bottom: 15px; /* Add some space at the bottom */
+            font-family: 'Russo One', sans-serif; /* Russo One font for h2 */
+        }
+        .info-box {
+            background-color: rgba(0, 0, 0, 0.5); /* Transparent black background */
+            padding: 20px;
+            margin: 20px auto 10px; /* Center the boxes horizontally */
+            width: 200px;
+            height: 200px; /* Fixed height for all boxes */
+            border-radius: 15px; /* Increased curve angle for the boxes */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .loading {
+            font-size: 20px;
+            color: #50b0ff;
+        }
+        .navigate-button-container {
+            margin-top: 30px; /* Add margin top */
+            margin-bottom: 30px; /* Add margin bottom */
+        }     
+        .navigate-button {
+            background-color: #00bfff; /* Neon blue button */
+            color: #5f5e5e; /* light gray text */
+            padding: 8px 20px; /* Smaller button size */
+            border: none;
+            border-radius: 8px; /* Less curved button */
+            font-size: 1em; /* Smaller font size */
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease; /* Smooth transition */
+            font-family: 'Russo One', sans-serif; /* Russo One font for button */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Button shadow */
+            margin-top: 20px; /* Add margin top */
+            display: inline-block; /* Center the buttons horizontally */
+        }                
+        .navigate-button:hover {
+            background-color: #00008b;
+        }
+    </style>
+</head>
+<body>
+    <h1>MONTHLY USAGE TRACKER</h1>
+    <div class="info-box">
+        <h2>January's Water Consumption</h2>
+        <p id="m1" class="loading">Loading...</p>
+    </div>
+    <div class="info-box">
+        <h2>February's Water Consumption</h2>
+        <p id="m2" class="loading">Loading...</p>
+    </div>
+    <div class="info-box">
+        <h2>March's Water Consumption</h2>
+        <p id="m3" class="loading">Loading...</p>
+    </div>
+    <div class="info-box">
+        <h2>April's Water Consumption</h2>
+        <p id="m4" class="loading">Loading...</p>
+    </div>
+    <div class="info-box">
+        <h2>May's Water Consumption</h2>
+        <p id="m5" class="loading">Loading...</p>
+    </div>
+    <div class="info-box">
+        <h2>June's Water Consumption</h2>
+        <p id="m6" class="loading">Loading...</p>
+    </div>
+    <div class="info-box">
+        <h2>July's Water Consumption</h2>
+        <p id="m7" class="loading">Loading...</p>
+    </div>
+    <div class="info-box">
+        <h2>August's Water Consumption</h2>
+        <p id="m8" class="loading">Loading...</p>
+    </div>
+    <div class="info-box">
+        <h2>September's Water Consumption</h2>
+        <p id="m9" class="loading">Loading...</p>
+    </div>
+    <div class="info-box">
+        <h2>October's Water Consumption</h2>
+        <p id="m10" class="loading">Loading...</p>
+    </div>
+    <div class="info-box">
+        <h2>November's Water Consumption</h2>
+        <p id="m11" class="loading">Loading...</p>
+    </div>
+    <div class="info-box">
+        <h2>Decmber's Water Consumption</h2>
+        <p id="m12" class="loading">Loading...</p>
+    </div>
+    <a href="tracker.html" class="navigate-button">Back to Tracker</a>
+
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDSh0I9WcifMky1_XOLiIRY0HcVGC1nfWg",
+            authDomain: "smart-water-management-b0aab.firebaseapp.com",
+            databaseURL: "https://smart-water-management-b0aab-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "smart-water-management-b0aab",
+            //storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "156099097280",
+            appId: "1:156099097280:web:40fd1ff79176b2d5fcf325"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Reference to the waterConsumption node
+        const waterConsumptionRef = database.ref('User1/History');
+
+        // Fetch the data and handle potential errors
+        waterConsumptionRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            document.getElementById('m1').innerText = data['Total-Litres-January'] + " liters";
+            document.getElementById('m2').innerText = data['Total-Litres-February'] + " liters";
+            document.getElementById('m3').innerText = data['Total-Litres-March'] + " liters";
+            document.getElementById('m4').innerText = data['Total-Litres-April'] + " liters";
+            document.getElementById('m5').innerText = data['Total-Litres-May'] + " liters";
+            document.getElementById('m6').innerText = data['Total-Litres-June'] + " liters";
+            document.getElementById('m7').innerText = data['Total-Litres-July'] + " liters";
+            document.getElementById('m8').innerText = data['Total-Litres-August'] + " liters";
+            document.getElementById('m9').innerText = data['Total-Litres-September'] + " liters";
+            document.getElementById('m10').innerText = data['Total-Litres-October'] + " liters";
+            document.getElementById('m11').innerText = data['Total-Litres-November'] + " liters";
+            document.getElementById('m12').innerText = data['Total-Litres-December'] + " liters";
+        }, (error) => {
+            console.error('Error fetching data:', error);
+            document.getElementById('current-consumption').innerText = "Error loading data";
+            document.getElementById('limit').innerText = "Error loading data";
+            document.getElementById('Total-Litres-January').innerText = "Error loading data";
+        });
+
+        console.log("Firebase config:", firebaseConfig); 
+
+    </script>
+</body>
+</html>

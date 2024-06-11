@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Login</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sansation:wght@700&family=Russo+One&display=swap">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(20deg, #00008b, #00bfff, #00008b);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #ddd;
+        }
+        h1 {
+            margin-top: 30px;
+            color: linear-gradient(20deg, #00008b, #00bfff, #00008b); /* Same as background gradient */
+            font-weight: 700; /* Bold */
+            font-size: 2.5em; /* Larger size */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); /* Text shadow */ 
+        }
+        h2 {
+            font-size: 1.8em; /* Larger size */
+            font-weight: 400; /* Normal weight */
+            color: #ddd; /* Black and dim white */
+            margin-bottom: 15px; /* Add some space at the bottom */
+            font-family: 'Russo One', sans-serif; /* Russo One font for h2 */
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5); /* Transparent black background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+        .container input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        .button {
+            background-color: #00bfff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Russo One', sans-serif; /* Russo One font for button */
+            width: 50%;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #003cffde;
+        }
+        .error-message {
+            color: red;
+            font-size: 1.0em;
+            margin-top: 10px;
+        }
+        .show-password {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            font-size: small;
+            margin: 10px 20px;
+            padding-left: 50px;
+        }
+        .show-password label {
+            margin: 0;
+            padding-left: -20px;
+            padding-right: -20px;
+        }
+        .navigate-button-container {
+            margin-top: 30px;
+            margin-bottom: 5px; /* Add margin bottom */
+        }
+        .navigate-button {
+            background-color: #00bfff; /* Neon blue button */
+            color: #5f5e5e; /* light gray text */
+            padding: 8px 20px; /* Smaller button size */
+            border: none;
+            border-radius: 8px; /* Less curved button */
+            font-size: 1em; /* Smaller font size */
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease; /* Smooth transition */
+            font-family: 'Russo One', sans-serif; /* Russo One font for button */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Button shadow */
+            margin-top: 12px; /* Add margin top */
+            display: inline-block; /* Center the buttons horizontally */
+        }
+        .navigate-button:hover {
+            background-color: #00008b; /* Darker neon blue on hover */
+        }
+    </style>
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <!-- Firebase Auth -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>AGENT LOGIN</h1>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <div class="show-password">
+            <label for="show-password">Show Password</label>
+            <input type="checkbox" id="show-password" onclick="togglePassword()">
+        </div>
+        <button class="button" onclick="login()">Login</button>
+        <p id="error-message" class="error-message"></p>
+    </div>
+    <a href="tracker.html" class="navigate-button">Back to Tracker</a>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyDSh0I9WcifMky1_XOLiIRY0HcVGC1nfWg",
+            authDomain: "smart-water-management-b0aab.firebaseapp.com",
+            databaseURL: "https://smart-water-management-b0aab-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "smart-water-management-b0aab",
+            storageBucket: "smart-water-management-b0aab.appspot.com",
+            messagingSenderId: "156099097280",
+            appId: "1:156099097280:web:40fd1ff79176b2d5fcf325"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        const auth = firebase.auth();
+
+        function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    window.location.href = 'modifyadultchildren.html'; // Redirect to modify page
+                })
+                .catch((error) => {
+                    document.getElementById('error-message').innerText = 'Invalid Credentials';
+                });
+        }
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const showPasswordCheckbox = document.getElementById('show-password');
+            if (showPasswordCheckbox.checked) {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
+        }
+    </script>
+</body>
+</html>

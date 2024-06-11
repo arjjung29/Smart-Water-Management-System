@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Water Management</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sansation:wght@700&family=Russo+One&display=swap">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background: linear-gradient(120deg, #00008b, #00bfff, #00008b); /* Gradient neon blue */
+            color: #ddd; /* Black and White text */
+            margin: 0;
+            padding: 0;
+        }
+        .welcome-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+        .welcome-container h1 {
+            font-size: 3em; /* Larger font size */
+            margin: 20px 0;
+            font-weight: bold; /* Bold font weight */
+            text-transform: uppercase; /* Uppercase text */
+            letter-spacing: 2px; /* Increased letter spacing */
+            text-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); /* Text shadow */
+        }
+        .welcome-container p {
+            font-size: 2.2em;
+            font-family: "Brush Script MT", cursive;
+            text-shadow: 0 0 5px rgba(97, 90, 90, 0.5); /* Text shadow */
+        }
+        .navigate-button {
+            background-color: #00bfff; /* Neon blue button */
+            color: #5f5e5e; /* light gray text */
+            padding: 8px 20px; /* Smaller button size */
+            border: none;
+            border-radius: 8px; /* Less curved button */
+            font-size: 1em; /* Smaller font size */
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease; /* Smooth transition */
+            font-family: 'Russo One', sans-serif; /* Russo One font for button */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Button shadow */
+            margin-top: 3px; /* Add margin top */
+            display: inline-block; /* Center the buttons horizontally */
+        }
+        .navigate-button:hover {
+            background-color: #00008b; /* Darker neon blue on hover */
+        }
+        .footer {
+            margin-top: 20px;
+        }
+
+        /* Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s;
+        }
+        .popup {
+            background: linear-gradient(120deg, #00008b, #00008b); /* Gradient neon blue */;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            color: #ddd;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .popup button {
+            background-color: #00bfff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 10px;
+            font-family: 'Russo One', sans-serif; /* Russo One font for button */
+            transition: background-color 0.3s ease;
+        }
+        .popup button:hover {
+            background-color: #003cffde;
+        }
+        .popup-overlay.show {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <h1>SMART WATER MANAGEMENT</h1>
+        <p>Track your water consumption efficiently and effortlessly.</p>
+        <a href="tracker.html" class="navigate-button">Go to Tracker</a>
+        <div class="footer">
+            <a href="contributors.html" class="navigate-button">Contributors</a>
+        </div>
+        <div class="footer">
+            <button class="navigate-button" onclick="showPopup()">Sign Out</button>
+        </div>
+    </div>
+
+    <!-- Popup HTML -->
+    <div id="signout-popup" class="popup-overlay">
+        <div class="popup">
+            <p>Are you sure you want to sign out?</p>
+            <button onclick="signOut()">Yes</button>
+            <button onclick="hidePopup()">No</button>
+        </div>
+    </div>
+
+    <script>
+        function showPopup() {
+            document.getElementById('signout-popup').classList.add('show');
+        }
+
+        function hidePopup() {
+            document.getElementById('signout-popup').classList.remove('show');
+        }
+
+        function signOut() {
+            // Add your sign-out logic here
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

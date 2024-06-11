@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sansation:wght@700&family=Russo+One&display=swap">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(120deg, #00008b, #00bfff, #00008b); /* Gradient neon blue */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #ddd;
+        }
+        h1 {
+            margin-top: 30px;
+            color: linear-gradient(20deg, #00008b, #00bfff, #00008b); /* Same as background gradient */
+            font-weight: 700; /* Bold */
+            font-size: 2.5em; /* Larger size */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); /* Text shadow */ 
+        }
+        h2 {
+            font-size: 1.8em; /* Larger size */
+            font-weight: 400; /* Normal weight */
+            color: #ddd; /* Black and dim white */
+            margin-bottom: 15px; /* Add some space at the bottom */
+            font-family: 'Russo One', sans-serif; /* Russo One font for h2 */
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5); /* Transparent black background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+        .container input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        .show-password {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            font-size: small;
+            margin: 10px 20px;
+            padding-left: 50px;
+        }
+        .show-password label {
+            margin: 0;
+            padding-left: -20px;
+            padding-right: -20px;
+        }
+        .button {
+            background-color: #00bfff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Russo One', sans-serif; /* Russo One font for button */
+            width: 50%;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #003cffde;
+        }
+        .error-message {
+            color: red;
+            font-size: 1.0em;
+            margin-top: 10px;
+        }
+        .toggle-link {
+            color: #00a2ff;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <!-- Firebase Auth -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <!-- Firebase Database -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+<body>
+    <div class="container" id="login-container">
+        <h1>LOGIN</h1>
+        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <div class="show-password">
+            <label for="show-password-login">Show Password</label>
+            <input type="checkbox" id="show-password-login" onclick="togglePassword('login-password')">
+        </div>
+        <button class="button" onclick="login()">Login</button>
+        <p id="login-error-message" class="error-message"></p>
+        <p class="toggle-link" onclick="toggleForm()">Don't have an account? Sign up</p>
+    </div>
+
+    <div class="container" id="signup-container" style="display:none;">
+        <h1>SIGN UP</h1>
+        <input type="email" id="signup-email" placeholder="Email" required>
+        <input type="password" id="signup-password" placeholder="Password" required>
+        <div class="show-password">
+            <label for="show-password-signup">Show Password</label>
+            <input type="checkbox" id="show-password-signup" onclick="togglePassword('signup-password')">
+        </div>
+        <button class="button" onclick="signUp()">Sign Up</button>
+        <p id="signup-error-message" class="error-message"></p>
+        <p class="toggle-link" onclick="toggleForm()">Already have an account? Login</p>
+    </div>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyDSh0I9WcifMky1_XOLiIRY0HcVGC1nfWg",
+            authDomain: "smart-water-management-b0aab.firebaseapp.com",
+            databaseURL: "https://smart-water-management-b0aab-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "smart-water-management-b0aab",
+            storageBucket: "smart-water-management-b0aab.appspot.com",
+            messagingSenderId: "156099097280",
+            appId: "1:156099097280:web:40fd1ff79176b2d5fcf325"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    window.location.href = 'welcome.html'; // Redirect to welcome page
+                })
+                .catch((error) => {
+                    document.getElementById('login-error-message').innerText = 'Invalid credentials';
+                });
+        }
+
+        function signUp() {
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    // Store user data in Realtime Database
+                    database.ref('users/' + user.uid).set({
+                        email: email,
+                    });
+                    window.location.href = 'welcome.html'; // Redirect to welcome page
+                })
+                .catch((error) => {
+                    document.getElementById('signup-error-message').innerText = error.message;
+                });
+        }
+
+        function toggleForm() {
+            const loginContainer = document.getElementById('login-container');
+            const signupContainer = document.getElementById('signup-container');
+            if (loginContainer.style.display === 'none') {
+                loginContainer.style.display = 'block';
+                signupContainer.style.display = 'none';
+            } else {
+                loginContainer.style.display = 'none';
+                signupContainer.style.display = 'block';
+            }
+        }
+
+        function togglePassword(id) {
+            const passwordInput = document.getElementById(id);
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
+        }
+    </script>
+</body>
+</html>
